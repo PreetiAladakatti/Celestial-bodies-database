@@ -1,1 +1,4 @@
 # Celestial-bodies-database
+
+This is one of the required projects to earn the Relational Databases certification at Freecodecamp. For this project, I built a database of celestial bodies using PostgreSQL using vs code.
+In this repository, you will find a universe-database.txt file which contains the psql code to build the universe database.There are total 5 tables that I created namely : galaxy,planet,star,constellation and moon. The constellation table was created to connect the dots between the planet table and the star table, since each planet should have a foreign key that refers to one of the rows in the star table. Keeping in mind the rules for building the celestial bodies database, I've built the universe database. Any corrections to the information provided here are genuinely welcomed.
