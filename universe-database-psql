@@ -1,0 +1,217 @@
+/* to login to PostgreSQL with psql to create our database */
+
+psql --username=freecodecamp --dbname=postgres
+
+/* to connect to our universe database */
+
+\c universe
+
+--Creating our first table star
+CREATE TABLE star(
+	star_id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL UNIQUE,
+	distance_in_light_years NUMERIC(5, 2) NOT NULL,
+	brightness_of_star NUMERIC(3, 2) NOT NULL,
+	approval_date DATE
+);
+
+--Inserting values
+INSERT INTO
+	star(name, distance_in_light_years, brightness_of_star, approval_date) 
+VALUES
+ ('era', 233.00,2.90,'2016-07-23'), 
+ ('kera', 23.00 ,2.09,'2001-03-21'),
+ ('mera',23.00,0.03,'2019-02-11'),
+ ('bera',23.00,3.20,'2017-07-01'),
+ ('fera',45.00,1.20,'2013-01-01'),
+ ('tera',55.00,0.10,'2019-08-09'),
+ ('lera',56.00,0.30,'2002-09-02'),
+ ('pera',77.00,1.34,'2018-02-11'),
+ ('hera',23.34,0.3,'2012-01-11'), 
+ ('cera',98.00,2.00,'2019-09-12'),
+ ('vera',55.78,1.12,'2011-02-22'),  
+ ('xera ',99.99 , 0.23,'2019-01-13'),
+ ('nera',66.78,0.22,'2017-09-22');  
+
+  
+  --Creating table constellation
+CREATE TABLE constellation(
+	constellation_id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL UNIQUE, 
+	year_discovered INT, 
+	meaning VARCHAR(50) NOT NULL, 
+	star_id INT NOT NULL
+);
+
+--Adding the foreign key
+ALTER TABLE constellation ADD FOREIGN KEY(star_id) REFERENCES star(star_id);
+
+--Inserting values
+INSERT INTO 
+	constellation(name, year_discovered, meaning, star_id)
+VALUES 
+	('Aquarius', NULL, 'Water-bearer', 1), 
+	('Aries', NULL, 'Ram', 2), 
+	('Bootes', NULL, 'Herdsman', 3), 
+	('Capricorn', NULL, 'Sea goat', 5), 
+	('Centaurus', NULL, 'Centaur', 5), 
+	('fetud', NULL, 'Sea fish shaped', 9), 
+	('Forpi', 1876, ‘leg shaped’, 6), 
+	('Lemon', NULL, 'Starfish shape', 7), 
+	('titma', NULL, 'tortise shape', 12), 
+	('peg', NULL, 'Peguin shape', 10), 
+	('paro', NULL, 'parrot shape', 11), 
+	('utini', NULL, 'huge', 8), 
+	('bendt', NULL, 'weird', 13);
+  
+--Creating table galaxy  
+CREATE TABLE galaxy(
+	galaxy_id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL UNIQUE, 
+	meaning TEXT NOT NULL, 
+	is_visible_to_naked_eye BOOLEAN NOT NULL, 
+	constellation_id INT NOT NULL
+); 
+
+--Adding the foreign key
+ALTER TABLE galaxy ADD FOREIGN KEY(constellation_id) REFERENCES constellation(constellation_id);
+
+--Inserting the values
+INSERT INTO
+	galaxy(name, meaning, is_visible_to_naked_eye, constellation_id)
+VALUES
+	('por', 'spherical', False, 5), 
+	('dor', ‘elliptical’,False, 5), 
+	('lor', 'irregular', True, 7), 
+	('nor', 'elliptical',False, 7), 
+	('kor', 'elliptical', False, 7), 
+	('bor', 'spherical', False, 7), 
+	('vor', 'spherical', True, 13), 
+	('xor', 'irregular', True, 13),
+	('zor', 'irregular', False, 10), 
+	('ior', 'huge', True, 11), 
+	('for', 'round', False, 6);
+	
+
+
+ALTER TABLE star ADD COLUMN galaxy_id INT REFERENCES galaxy(galaxy_id); 
+
+UPDATE star SET galaxy_id = 11;
+
+--Setting value for galaxy_id as not null
+ALTER TABLE star ALTER COLUMN galaxy_id SET NOT NULL;
+
+--Creating table planet
+CREATE TABLE planet(
+	planet_id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL UNIQUE, 
+	orbital_period_in_years NUMERIC(7, 2) NOT NULL, 
+	rotation_period_in_days NUMERIC(5, 2), 
+	has_moon BOOLEAN NOT NULL, 
+	star_id INT NOT NULL
+); 
+
+--Adding the foreign key
+ALTER TABLE planet ADD FOREIGN KEY(star_id) REFERENCES star(star_id);
+
+ --Inserting the values
+INSERT INTO
+	planet(name, orbital_period_in_years, rotation_period_in_days, has_moon, star_id)
+VALUES
+	('Mercury', 0.34, 56.43, False, 13), 
+	('venus', 0.87,675.97, False, 7), 
+	('earth', 1.00, 1.00, True, 5), 
+	('Mars', 1.88, 1.03, True, 8), 
+	('jupiter',34.23, 0.34, True, 9), 
+	('Saturn',34.22, 0.11, True, 4), 
+	('Uranus', 87.32, 0.45, True, 2), 
+	('Neptune',211.34, 0.32, True, 1), 
+	('Ceres', 4.67, 0.32, False, 7), 
+	('orcus',343.11, NULL, True, 11), 
+	('Pluto', 232.11,8.12, True, 11), 
+	('Harmus',421.11, 0.11, True, 3), 
+	('Qutaus', 232.00, 0.35, True, 12), 
+	('make', 302.00, 0.89, True, 6), 
+	('Gong', 555.00, 14.22, True, 1), 
+	('Ritz',676.00,13.12, True, 9), 
+	('hed', 1232.00, 0.43, False, 8), 
+	('Salac', 233.11, 0.24, True, 10), 
+	('Vardi', 313.88, 0.23, True, 1); 
+  
+ --Creating table moon 
+ CREATE TABLE moon(
+	moon_id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL UNIQUE, 
+	year_discovered INT, 
+	diameter_in_km INT,
+	planet_id INT NOT NULL
+); 
+
+
+--Adding the foreign key
+ALTER TABLE moon ADD FOREIGN KEY(planet_id) REFERENCES planet(planet_id); 
+
+--Inserting the values
+INSERT INTO 
+	moon(name, year_discovered, diameter_in_km, planet_id)
+VALUES
+	('Moon', NULL, 3476, 3), 
+	('Phobos', 1877, 23, 4), 
+	('Deimos', 1877, 13, 4), 
+	('Io', 1610, 3630, 5), 
+	('Europa', 1610, 3138, 5), 
+	('Ganymede', 1610, 5262, 5), 
+	('Callisto', 1610, 4800, 5), 
+	('Amalthea', 1892, 200, 5), 
+	('Himalia', 1904, 170, 5), 
+	('Thebe', 1979, 90, 5), 
+	('Mimas', 1789, 394, 6), 
+	('Enceladus', 1789, 502, 6), 
+	('Tethys', 1684, 1048, 6), 
+	('Dione', 1684, 1120, 6), 
+	('Rhea', 1672, 1530, 6), 
+	('Titan', 1655, 5150, 6), 
+	('Hyperion', 1848, 270, 6), 
+	('Iapetus', 1671, 1435, 6), 
+	('Phoebe', 1899, 220, 6), 
+	('Janus', 1966, 190, 6), 
+	('Epimetheus', 1966, 120, 6), 
+	('Atlas', 1980, 40, 6), 
+	('Prometheus', 1980, 80, 6), 
+	('Pandora', 1980, 100, 6), 
+	('Pan', 1990, 20, 6), 
+  ('Ariel', 1851, 1160, 7), 
+	('Umbriel', 1851, 1190, 7), 
+	('Titania', 1787, 1610, 7), 
+	('Oberon', 1787, 1550, 7), 
+	('Miranda', 1948, 485, 7), 
+	('Puck', 1985, 170, 7), 
+	('Triton', 1846, 2720, 8), 
+	('Nereid', 1949, 340, 8), 
+	('Despina', 1989, 150, 8), 
+	('Galatea', 1989, 150, 8), 
+	('Larissa', 1981, 400, 8), 
+	('Vanth', 2005, NULL, 10), 
+	('Charon', 1978, 1200, 11), 
+	('Nix', 2005, 46, 11), 
+	('Hydra', 2005, 61, 11), 
+	('Kerberos', 2011, 28, 11), 
+	('Styx', 2012, 20, 11), 
+	('Actaea', 2006, NULL, 18), 
+	(“Hiaka”, 2005, 400, 12), 
+	('Namaka', 2005, 200, 12), 
+	('Weywot', 2007, NULL, 13), 
+	('Ilmare', 2009, NULL, 19), 
+	('Xiangliu', 2010, NULL, 15), 
+	('Dysnomia', 2005, 684, 16);
+	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
